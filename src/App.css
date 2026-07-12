@@ -99,40 +99,54 @@ body {
   color: var(--text-dim);
 }
 
-/* ---------- Specialty toggles ---------- */
+/* ---------- Specialty bed counters ---------- */
 
-.toggle-list {
+.specialty-list {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.specialty-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   flex-wrap: wrap;
+}
+
+.specialty-info {
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
-.specialty-toggle {
-  border: 1px solid var(--line);
-  background: var(--panel-raised);
-  color: var(--text-dim);
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 13.5px;
+.specialty-name {
+  font-size: 14.5px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  color: var(--text);
 }
 
-.specialty-toggle.on {
+.specialty-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+}
+
+.specialty-badge.on {
   background: var(--green-dim);
   border-color: var(--green);
   color: var(--green);
 }
 
-.specialty-toggle.off {
+.specialty-badge.off {
   background: var(--red-dim);
   border-color: var(--red);
   color: var(--red);
-}
-
-.specialty-toggle:hover {
-  filter: brightness(1.15);
 }
 
 /* ---------- Resource counters ---------- */
@@ -283,4 +297,3 @@ body {
     grid-column: 1 / -1;
   }
 }
-

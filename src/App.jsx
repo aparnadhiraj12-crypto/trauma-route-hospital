@@ -15,8 +15,7 @@ const SPECIALTY_LABELS = {
 };
 
 const RESOURCE_LABELS = {
-  icuBeds: "ICU Beds",
-  otSlots: "OT Slots",
+  otSlots: "OT Slots (Theatres Free)",
 };
 
 export default function App() {
@@ -60,9 +59,9 @@ export default function App() {
     return () => socket.off("alert:new", handleNewAlert);
   }, [selectedId]);
 
-  function toggleSpecialty(key) {
+  function adjustSpecialtyBeds(key, delta) {
     if (!selectedHospital) return;
-    const newValue = !selectedHospital.specialties[key];
+    const newValue = Math.max(0, (selectedHospital.specialties[key] || 0) + delta);
 
     setHospitals((prev) =>
       prev.map((h) =>
@@ -132,17 +131,27 @@ export default function App() {
       {selectedHospital && (
         <div className="dash-grid">
           <section className="panel">
-            <h2>Specialties</h2>
-            <div className="toggle-list">
-              {Object.entries(SPECIALTY_LABELS).map(([key, label]) => (
-                <button
-                  key={key}
-                  className={`specialty-toggle ${selectedHospital.specialties[key] ? "on" : "off"}`}
-                  onClick={() => toggleSpecialty(key)}
-                >
-                  {label}: {selectedHospital.specialties[key] ? "Available" : "Unavailable"}
-                </button>
-              ))}
+            <h2>Specialties (beds available)</h2>
+            <div className="specialty-list">
+              {Object.entries(SPECIALTY_LABELS).map(([key, label]) => {
+                const beds = selectedHospital.specialties[key] || 0;
+                const available = beds > 0;
+                return (
+                  <div key={key} className="specialty-row">
+                    <div className="specialty-info">
+                      <span className="specialty-name">{label}</span>
+                      <span className={`specialty-badge ${available ? "on" : "off"}`}>
+                        {available ? "Available" : "Unavailable"}
+                      </span>
+                    </div>
+                    <div className="counter">
+                      <button onClick={() => adjustSpecialtyBeds(key, -1)}>−</button>
+                      <span className="count">{beds}</span>
+                      <button onClick={() => adjustSpecialtyBeds(key, 1)}>+</button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </section>
 
@@ -194,4 +203,3 @@ export default function App() {
     </div>
   );
 }
-

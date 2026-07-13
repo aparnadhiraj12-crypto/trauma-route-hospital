@@ -12,20 +12,157 @@ const SPECIALTY_LABELS = {
   orthopedics: "Orthopedics",
   generalSurgery: "General Surgery",
   plasticSurgery: "Plastic Surgery",
+  forensicExam: "Forensic Exam",
+  gynecology: "Gynecology",
+  psychiatricSupport: "Psychiatric Support",
 };
 
 const RESOURCE_LABELS = {
   otSlots: "OT Slots (Theatres Free)",
 };
 
+/* ---------- Icons (inline, no external icon library needed) ---------- */
+
+function IconGrid({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  );
+}
+
+function IconBell({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10 21a2 2 0 0 0 4 0" />
+    </svg>
+  );
+}
+
+function IconBed({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 18v-7a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      <path d="M13 13v-2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v7" />
+      <path d="M3 13h18" />
+      <path d="M3 18h18" />
+      <path d="M5 11V6" />
+    </svg>
+  );
+}
+
+function IconUsers({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="7" r="4" />
+      <path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2" />
+      <path d="M17 3.13a4 4 0 0 1 0 7.75" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+    </svg>
+  );
+}
+
+function IconBuilding({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 21h18" />
+      <path d="M5 21V7l7-4 7 4v14" />
+      <path d="M9 9h.01" /><path d="M9 13h.01" /><path d="M9 17h.01" />
+      <path d="M15 9h.01" /><path d="M15 13h.01" /><path d="M15 17h.01" />
+    </svg>
+  );
+}
+
+function IconSettings({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  );
+}
+
+function IconActivity({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+    </svg>
+  );
+}
+
 const NAV_ITEMS = [
-  { key: "overview", label: "Overview" },
-  { key: "alerts", label: "Ambulance Alerts", live: true },
-  { key: "beds", label: "Bed & Specialty Management" },
-  { key: "patients", label: "Patients", disabled: true },
-  { key: "departments", label: "Departments", disabled: true },
-  { key: "settings", label: "Settings", disabled: true },
+  { key: "overview", label: "Overview", icon: IconGrid },
+  { key: "alerts", label: "Ambulance Alerts", icon: IconBell, live: true },
+  { key: "beds", label: "Bed & Specialty Management", icon: IconBed },
+  { key: "patients", label: "Patients", icon: IconUsers, disabled: true },
+  { key: "departments", label: "Departments", icon: IconBuilding, disabled: true },
+  { key: "settings", label: "Settings", icon: IconSettings, disabled: true },
 ];
+
+/* ---------- Small chart components, driven by real hospital data ---------- */
+
+function DonutChart({ value, max, color, caption }) {
+  const radius = 54;
+  const circumference = 2 * Math.PI * radius;
+  const pct = max > 0 ? Math.min(1, value / max) : 0;
+  const offset = circumference * (1 - pct);
+
+  return (
+    <div className="donut-wrap">
+      <svg className="donut-svg" viewBox="0 0 140 140">
+        <circle className="donut-track" cx="70" cy="70" r={radius} />
+        <circle
+          className="donut-value"
+          cx="70"
+          cy="70"
+          r={radius}
+          style={{
+            stroke: color,
+            strokeDasharray: circumference,
+            strokeDashoffset: offset,
+          }}
+        />
+      </svg>
+      <div className="donut-center">
+        <span className="donut-number">{value}/{max}</span>
+        <span className="donut-caption">{caption}</span>
+      </div>
+    </div>
+  );
+}
+
+function SpecialtyBars({ specialties }) {
+  const entries = Object.entries(SPECIALTY_LABELS).map(([key, label]) => ({
+    key,
+    label,
+    value: specialties[key] || 0,
+  }));
+  const max = Math.max(1, ...entries.map((e) => e.value));
+
+  return (
+    <div className="bars-list">
+      {entries.map((e) => (
+        <div className="bar-row" key={e.key}>
+          <span className="bar-label">{e.label}</span>
+          <div className="bar-track">
+            <div
+              className="bar-fill"
+              style={{
+                width: `${(e.value / max) * 100}%`,
+                background: e.value > 0 ? "var(--accent)" : "var(--line)",
+              }}
+            />
+          </div>
+          <span className="bar-value">{e.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function App() {
   const [hospitals, setHospitals] = useState([]);
@@ -125,6 +262,7 @@ export default function App() {
   if (!selectedHospital) return <div className="page">No hospital data available.</div>;
 
   const totalBeds = Object.values(selectedHospital.specialties).reduce((a, b) => a + b, 0);
+  const totalSpecialties = Object.keys(SPECIALTY_LABELS).length;
   const availableSpecialties = Object.values(selectedHospital.specialties).filter((v) => v > 0).length;
 
   return (
@@ -137,20 +275,24 @@ export default function App() {
         </div>
 
         <div className="sidebar-nav">
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.key}
-              className={`nav-item ${activeTab === item.key ? "active" : ""} ${item.disabled ? "disabled" : ""}`}
-              onClick={() => !item.disabled && setActiveTab(item.key)}
-              disabled={item.disabled}
-            >
-              <span className="nav-label">{item.label}</span>
-              {item.key === "alerts" && pendingCount > 0 && (
-                <span className="nav-badge">{pendingCount}</span>
-              )}
-              {item.disabled && <span className="nav-soon">Soon</span>}
-            </button>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.key}
+                className={`nav-item ${activeTab === item.key ? "active" : ""} ${item.disabled ? "disabled" : ""}`}
+                onClick={() => !item.disabled && setActiveTab(item.key)}
+                disabled={item.disabled}
+              >
+                <Icon className="nav-icon" />
+                <span className="nav-label">{item.label}</span>
+                {item.key === "alerts" && pendingCount > 0 && (
+                  <span className="nav-badge">{pendingCount}</span>
+                )}
+                {item.disabled && <span className="nav-soon">Soon</span>}
+              </button>
+            );
+          })}
         </div>
 
         <div className="sidebar-footer">
@@ -163,53 +305,108 @@ export default function App() {
       <div className="main-area">
         <header className="topbar">
           <h1>{NAV_ITEMS.find((n) => n.key === activeTab)?.label}</h1>
-          <select
-            className="hospital-select"
-            value={selectedId}
-            onChange={(e) => setSelectedId(e.target.value)}
-          >
-            {hospitals.map((h) => (
-              <option key={h.id} value={h.id}>
-                {h.name}
-              </option>
-            ))}
-          </select>
+          <div className="topbar-right">
+            <button
+              className="icon-btn"
+              aria-label="Pending ambulance alerts"
+              onClick={() => setActiveTab("alerts")}
+            >
+              <IconBell className="icon-btn-icon" />
+              {pendingCount > 0 && <span className="icon-btn-badge">{pendingCount}</span>}
+            </button>
+            <select
+              className="hospital-select"
+              value={selectedId}
+              onChange={(e) => setSelectedId(e.target.value)}
+            >
+              {hospitals.map((h) => (
+                <option key={h.id} value={h.id}>
+                  {h.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </header>
 
         <main className="content-area">
           {activeTab === "overview" && (
-            <div className="overview-grid">
-              <div className="stat-card">
-                <span className="stat-value">{availableSpecialties}</span>
-                <span className="stat-label">Specialties Available</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-value">{totalBeds}</span>
-                <span className="stat-label">Total Beds Free</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-value">{selectedHospital.resources.otSlots}</span>
-                <span className="stat-label">OT Slots Free</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-value">{pendingCount}</span>
-                <span className="stat-label">Pending Alerts</span>
-              </div>
+            <div className="overview-layout">
+              <div className="overview-main">
+                <div className="stat-cards-grid">
+                  <div className="stat-card">
+                    <span className="stat-icon"><IconBuilding /></span>
+                    <span className="stat-body">
+                      <span className="stat-value">{availableSpecialties}</span>
+                      <span className="stat-label">Specialties Available</span>
+                    </span>
+                  </div>
+                  <div className="stat-card">
+                    <span className="stat-icon"><IconBed /></span>
+                    <span className="stat-body">
+                      <span className="stat-value">{totalBeds}</span>
+                      <span className="stat-label">Total Beds Free</span>
+                    </span>
+                  </div>
+                  <div className="stat-card">
+                    <span className="stat-icon"><IconActivity /></span>
+                    <span className="stat-body">
+                      <span className="stat-value">{selectedHospital.resources.otSlots}</span>
+                      <span className="stat-label">OT Slots Free</span>
+                    </span>
+                  </div>
+                  <div className="stat-card">
+                    <span className="stat-icon"><IconBell /></span>
+                    <span className="stat-body">
+                      <span className="stat-value">{pendingCount}</span>
+                      <span className="stat-label">Pending Alerts</span>
+                    </span>
+                  </div>
+                </div>
 
-              <div className="panel overview-hospital-info">
-                <h2>{selectedHospital.name}</h2>
-                <p className="dim">Live status snapshot — switch to "Bed & Specialty Management" to edit.</p>
-                <div className="specialty-chip-row">
-                  {Object.entries(SPECIALTY_LABELS).map(([key, label]) => {
-                    const beds = selectedHospital.specialties[key] || 0;
-                    return (
-                      <span key={key} className={`chip ${beds > 0 ? "on" : "off"}`}>
-                        {label} · {beds}
-                      </span>
-                    );
-                  })}
+                <div className="panel overview-hospital-info">
+                  <h2>{selectedHospital.name}</h2>
+                  <p className="dim">Live status snapshot — switch to "Bed & Specialty Management" to edit.</p>
+                  <div className="specialty-chip-row">
+                    {Object.entries(SPECIALTY_LABELS).map(([key, label]) => {
+                      const beds = selectedHospital.specialties[key] || 0;
+                      return (
+                        <span key={key} className={`chip ${beds > 0 ? "on" : "off"}`}>
+                          {label} · {beds}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
+
+              <aside className="overview-sidebar">
+                <div className="panel chart-panel">
+                  <h2>Specialty Availability</h2>
+                  <div className="donut-row">
+                    <DonutChart
+                      value={availableSpecialties}
+                      max={totalSpecialties}
+                      color="var(--accent)"
+                      caption="specialties open"
+                    />
+                    <div className="donut-legend">
+                      <span className="donut-legend-item">
+                        <span className="donut-legend-dot" style={{ background: "var(--accent)" }} />
+                        {availableSpecialties} available
+                      </span>
+                      <span className="donut-legend-item">
+                        <span className="donut-legend-dot" style={{ background: "var(--panel-soft)", border: "1px solid var(--line)" }} />
+                        {totalSpecialties - availableSpecialties} unavailable
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="panel chart-panel">
+                  <h2>Beds by Specialty</h2>
+                  <SpecialtyBars specialties={selectedHospital.specialties} />
+                </div>
+              </aside>
             </div>
           )}
 
@@ -297,4 +494,3 @@ export default function App() {
     </div>
   );
 }
-

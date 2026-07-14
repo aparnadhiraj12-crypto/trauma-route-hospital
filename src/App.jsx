@@ -94,6 +94,14 @@ function IconActivity({ className }) {
   );
 }
 
+function IconChevron({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
 const NAV_ITEMS = [
   { key: "overview", label: "Overview", icon: IconGrid },
   { key: "alerts", label: "Ambulance Alerts", icon: IconBell, live: true },
@@ -164,6 +172,77 @@ function SpecialtyBars({ specialties }) {
   );
 }
 
+/* ---------- Expandable alert card ---------- */
+
+function AlertCard({ alert, expanded, onToggle, onAccept }) {
+  const v = alert.vitals || {};
+  const hasVitals = v.systolic || v.diastolic || v.heartRate || v.spo2 || v.conscious !== undefined;
+  const hasPatientInfo = v.age || v.gender;
+
+  return (
+    <div className={`alert-card ${alert.status} ${expanded ? "expanded" : ""}`}>
+      <button className="alert-card-head" onClick={onToggle}>
+        <div className="alert-top">
+          <strong>ETA: {alert.eta} min</strong>
+          <span className="status-tag">{alert.status}</span>
+        </div>
+        <div className="alert-injuries">{alert.injuries.join(", ")}</div>
+        <IconChevron className="alert-chevron" />
+      </button>
+
+      {expanded && (
+        <div className="alert-details">
+          {hasPatientInfo && (
+            <div className="alert-detail-block">
+              <span className="alert-detail-label">Patient</span>
+              <div className="alert-detail-row">
+                {v.age && <span>{v.age} yrs</span>}
+                {v.gender && <span style={{ textTransform: "capitalize" }}>{v.gender}</span>}
+              </div>
+            </div>
+          )}
+
+          <div className="alert-detail-block">
+            <span className="alert-detail-label">All symptoms</span>
+            <div className="alert-detail-row">{alert.injuries.join(", ")}</div>
+          </div>
+
+          {hasVitals && (
+            <div className="alert-detail-block">
+              <span className="alert-detail-label">Vitals</span>
+              <div className="alert-detail-row">
+                {(v.systolic || v.diastolic) && <span>BP {v.systolic || "—"}/{v.diastolic || "—"}</span>}
+                {v.heartRate && <span>HR {v.heartRate} bpm</span>}
+                {v.spo2 && <span>SpO2 {v.spo2}%</span>}
+                {v.conscious !== undefined && v.conscious !== null && (
+                  <span>{v.conscious ? "Conscious" : "Unconscious"}</span>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="alert-detail-block">
+            <span className="alert-detail-label">Alert ID</span>
+            <div className="alert-detail-row alert-id-value">{alert.id}</div>
+          </div>
+        </div>
+      )}
+
+      {alert.status === "pending" && (
+        <button
+          className="accept-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAccept(alert.id);
+          }}
+        >
+          Accept
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function App() {
   const [hospitals, setHospitals] = useState([]);
   const [selectedId, setSelectedId] = useState("");
@@ -171,6 +250,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [usingMockData, setUsingMockData] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [expandedAlertId, setExpandedAlertId] = useState(null);
 
   const selectedHospital = hospitals.find((h) => h.id === selectedId);
   const pendingCount = alerts.filter((a) => a.status === "pending").length;
@@ -256,6 +336,10 @@ export default function App() {
     } catch (err) {
       console.error("Failed to accept alert:", err);
     }
+  }
+
+  function toggleExpanded(alertId) {
+    setExpandedAlertId((prev) => (prev === alertId ? null : alertId));
   }
 
   if (loading) return <div className="page">Loading hospitals...</div>;
@@ -464,27 +548,13 @@ export default function App() {
               {alerts.length === 0 && <p className="dim">No alerts yet.</p>}
               <div className="alerts-grid">
                 {alerts.map((alert) => (
-                  <div key={alert.id} className={`alert-card ${alert.status}`}>
-                    <div className="alert-top">
-                      <strong>ETA: {alert.eta} min</strong>
-                      <span className="status-tag">{alert.status}</span>
-                    </div>
-                    <div className="alert-injuries">{alert.injuries.join(", ")}</div>
-                    {alert.vitals && Object.keys(alert.vitals).length > 0 && (
-                      <div className="alert-vitals">
-                        {alert.vitals.systolic && (
-                          <span>BP: {alert.vitals.systolic}/{alert.vitals.diastolic} </span>
-                        )}
-                        {alert.vitals.heartRate && <span>HR: {alert.vitals.heartRate}bpm </span>}
-                        {alert.vitals.spo2 && <span>SpO2: {alert.vitals.spo2}% </span>}
-                      </div>
-                    )}
-                    {alert.status === "pending" && (
-                      <button className="accept-btn" onClick={() => handleAccept(alert.id)}>
-                        Accept
-                      </button>
-                    )}
-                  </div>
+                  <AlertCard
+                    key={alert.id}
+                    alert={alert}
+                    expanded={expandedAlertId === alert.id}
+                    onToggle={() => toggleExpanded(alert.id)}
+                    onAccept={handleAccept}
+                  />
                 ))}
               </div>
             </div>
@@ -494,3 +564,4 @@ export default function App() {
     </div>
   );
 }
+
